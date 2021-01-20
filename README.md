@@ -1,7 +1,6 @@
-# PSG Cardano Wallet API
+# .NET Cardano Wallet API
 
-_For consultancy services email [enterprise.solutions@iohk.io](mailto:enterprise.solutions@iohk.io)_
-### Scala and Java client for the Cardano Wallet API
+### .NET client for the Cardano Wallet API
 
 The Cardano node exposes a [REST like API](https://github.com/input-output-hk/cardano-wallet) 
 allowing clients to perform a variety of tasks including 
@@ -13,15 +12,13 @@ allowing clients to perform a variety of tasks including
 
 The full list of capabilities can be found [here](https://input-output-hk.github.io/cardano-wallet/api/edge/). 
      
-This artefact wraps calls to that API to make them easily accessible to Java or Scala developers.
+This artefact wraps calls to that API to make them easily accessible to .NET developers.
 
-It also provides an executable jar to provide rudimentary command line access. 
+It also provides an executable to provide rudimentary command line access. 
 
 
 - [Building](#building)
 - [Usage](#usage)
-    - [scala](#usagescala)
-    - [java](#usagejava)
 - [Command line executable jar](#cmdline)
 - [Examples](#examples)
 - [Issues](#issues)
@@ -29,17 +26,17 @@ It also provides an executable jar to provide rudimentary command line access.
 
 ### <a name="building"></a> Building 
 
-This is an `sbt` project, so the usual `sbt` commands apply.
+This is a .NET project, so the usual `dotnet` commands apply.
 
 Clone the [repository](https://github.com/input-output-hk/psg-cardano-wallet-api) 
 
 To build and publish the project to your local repository use 
 
-`sbt publish`
+`dotnet publish`
 
 To build the command line executable jar use
 
-`sbt assembly`  
+`dotnet publish`  
 
 To build the command line executable jar skipping tests, use
 
@@ -62,53 +59,6 @@ Before you can use this API you need a cardano wallet backend to contact, you ca
 [here](https://github.com/input-output-hk/cardano-wallet). The docker setup is recommended.
  
 Alternatively, for 'tire kicking' purposes you may try  `http://cardano-wallet-testnet.iog.solutions:8090/v2/`    
-     
-#### <a name="usagescala"></a>Scala
-
-Add the library to your dependencies 
-
-`libraryDependencies += "solutions.iog" %% "psg-cardano-wallet-api" % "x.x.x"`
-
-The api calls return a HttpRequest set up to the correct url and a mapper to take the entity result and 
-map it from Json to the corresponding case classes. Using `networkInfo` as an example...
-
-```
-import akka.actor.ActorSystem
-import iog.psg.cardano.CardanoApi.CardanoApiOps.{CardanoApiRequestOps}
-import iog.psg.cardano.CardanoApi.{CardanoApiResponse, ErrorMessage, defaultMaxWaitTime}
-import iog.psg.cardano.{ApiRequestExecutor, CardanoApi}
-import iog.psg.cardano.CardanoApiCodec.NetworkInfo
-
-import scala.concurrent.Future
-
-object Main {
-
-  def main(args: Array[String]): Unit = {
-
-    implicit val requestExecutor = ApiRequestExecutor
-
-    implicit val as = ActorSystem("MyActorSystem")
-    val baseUri = "http://localhost:8090/v2/"
-    import as.dispatcher
-
-    val api = new CardanoApi(baseUri)
-
-    val networkInfoF: Future[CardanoApiResponse[NetworkInfo]] =
-      api.networkInfo.execute // async (recommended)
-
-    // OR use blocking version for tests 
-    val networkInfo: CardanoApiResponse[NetworkInfo] =
-      api.networkInfo.executeBlocking
-
-    networkInfo match {
-      case Left(ErrorMessage(message, code)) => //do something
-      case Right(netInfo: NetworkInfo) => // good!
-    }
-  }
-}
-```
- 
-#### <a name="usagejava"></a>Java
 
 First, add the library to your dependencies, 
 ```
