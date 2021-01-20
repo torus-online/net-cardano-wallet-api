@@ -10,9 +10,9 @@ namespace CardanoWallet
         public DateTime? EndTime { get; set; } = null;
         public Order Order
         {
-            get => _order == null ? CardanoWallet.Order.Descending : _order;
+            get => _order.HasValue ? _order.Value : CardanoWallet.Order.Descending;
             set => _order = value;
-        };
+        }
 
         private readonly string _walletId;
         private Order? _order = null;
